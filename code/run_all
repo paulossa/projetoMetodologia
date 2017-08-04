@@ -1,0 +1,14 @@
+#/bin/bash
+
+mkdir -p output
+
+for trace in small-r small-p small-o medium-r medium-p medium-o large-r large-p large-o
+do
+    #for alg in quick-sort merge-sort bucket-sort
+    for alg in quicksort
+    do
+      mkdir output/$trace
+      python $alg.py < load/$trace > output/$alg.$trace.out
+
+    done
+done

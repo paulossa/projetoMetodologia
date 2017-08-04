@@ -7,8 +7,10 @@ do
     #for alg in quick-sort merge-sort bucket-sort
     for alg in quicksort
     do
-      mkdir output/$trace
-      python $alg.py < load/$trace > output/$alg.$trace.out
-
+      echo $alg $trace
+      for i in $(seq 1 5)
+        do
+          python $alg.py < load/$trace > output/$alg.$trace.$i.out
+        done
     done
 done

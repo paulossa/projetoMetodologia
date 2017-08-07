@@ -11,6 +11,10 @@ def mergeSort(arrayToSort, beginIndex, endIndex):
 	left  = mergeSort(arrayToSort, beginIndex, middle - 1)
 	rigth = mergeSort(arrayToSort, middle, endIndex)
 
+	#MERGE PROCEDURE 
+	#I left it here thinking about time efficiency.
+	#Function calls in a recursion tree are very costly.
+
 	lenLeft, lenRigth = (middle - beginIndex), (endIndex - middle + 1)
 	indexLeft, indexRigth = 0, 0
 	result = []

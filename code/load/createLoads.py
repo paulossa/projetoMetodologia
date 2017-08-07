@@ -34,7 +34,7 @@ def createFile(s, o):
 
 def main():
     sizes = ["small", "medium", "large"]
-    orders = ["r", "p", "o"]
+    orders = ["r", "p", "o"] #random, partial, ordered?
 
     for size in sizes:
         for ordr in orders:

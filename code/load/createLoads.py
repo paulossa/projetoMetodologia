@@ -1,15 +1,15 @@
 import random
 
 def createFile(s, o):
-    fileName = "%s-%s" %(s, o)
+    fileName = "load/%s-%s" %(s, o)
     fileObj = open(fileName, 'w+')
     size = 0
     if s == "small":
-        size = 5000 # 5 mil
+        size = 1000 #1 mil
     elif s == "medium":
-        size = 500000 # 500 mil
+        size = 10000 #10 mil
     elif s == "large":
-        size = 5000000
+        size = 100000 #100 mil
 
     if (o == "o"):
         for number in xrange(1, size + 1):

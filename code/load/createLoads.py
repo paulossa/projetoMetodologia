@@ -1,3 +1,5 @@
+#coding: utf-8
+
 import random
 
 def createFile(s, o):
@@ -7,9 +9,9 @@ def createFile(s, o):
     if s == "small":
         size = 1000 #1 mil
     elif s == "medium":
-        size = 10000 #10 mil
-    elif s == "large":
         size = 100000 #100 mil
+    elif s == "large":
+        size = 1000000 #1 milhão
 
     if (o == "o"):
         for number in xrange(1, size + 1):

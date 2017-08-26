@@ -1,6 +1,12 @@
 import time
-
+from datetime import datetime
 # BASE CODE
+def timeDiff(b, e):
+    timedelta = e - b
+    out = (timedelta.seconds * 1000000) + timedelta.microseconds
+    return out
+
+
 def main():
     tempArray = []
     try:
@@ -10,9 +16,9 @@ def main():
     except:
         pass
 
-    begin = int(round(time.time() * 1000))
+    begin = datetime.now()
     tempArray.sort()
-    end = int(round(time.time() * 1000))
-    print "%d %d" %(begin, end)
+    end = datetime.now()
+    print "%d" %timeDiff(begin, end)
 
 main()

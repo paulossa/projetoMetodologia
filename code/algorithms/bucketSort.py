@@ -1,5 +1,11 @@
 from time import time
+from datetime import datetime
 from math import sqrt
+
+def timeDiff(b, e):
+    timedelta = e - b
+    out = (timedelta.seconds * 1000000) + timedelta.microseconds
+    return out
 
 def bucket_sort(seq):
     biggest = max(seq)
@@ -22,7 +28,7 @@ if __name__ == '__main__':
     except:
         pass
 
-    begin = time()
+    begin = datetime.now()
     bucket_sort(arrayToSort)
-    end = time()
-    print "%d %d" %(begin, end)
+    end = datetime.now()
+    print "%d" %timeDiff(begin, end)

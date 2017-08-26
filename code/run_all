@@ -3,11 +3,12 @@
 mkdir -p output
 
 python load/createLoads.py
+rm output/*-*
 
 for trace in small-r small-p small-o medium-r medium-p medium-o large-r large-p large-o
 do
     #for alg in quick-sort merge-sort bucket-sort
-    for alg in mergeSort quicksort bucketSort
+    for alg in quicksort mergeSort  bucketSort
     do
       echo $alg $trace
       for i in $(seq 1 5)
@@ -16,3 +17,6 @@ do
         done
     done
 done
+
+python processOutput.py
+echo "outputCSV feito"

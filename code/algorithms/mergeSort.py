@@ -1,5 +1,11 @@
 from time import time
+from datetime import datetime
 from sys import setrecursionlimit
+
+def timeDiff(b, e):
+    timedelta = e - b
+    out = (timedelta.seconds * 1000000) + timedelta.microseconds
+    return out
 
 def mergeSort(arrayToSort, beginIndex, endIndex):
 
@@ -11,7 +17,7 @@ def mergeSort(arrayToSort, beginIndex, endIndex):
 	left  = mergeSort(arrayToSort, beginIndex, middle - 1)
 	rigth = mergeSort(arrayToSort, middle, endIndex)
 
-	#MERGE PROCEDURE 
+	#MERGE PROCEDURE
 	#I left it here thinking about time efficiency.
 	#Function calls in a recursion tree are very costly.
 
@@ -50,7 +56,7 @@ if __name__ == '__main__':
 	except:
 		pass
 
-	begin = time()
+	begin = datetime.now()
 	mergeSort(arrayToSort, 0, len(arrayToSort) - 1)
-	end = time()
-	print "%d %d" %(begin, end)
+	end = datetime.now()
+	print "%d" %timeDiff(begin, end)

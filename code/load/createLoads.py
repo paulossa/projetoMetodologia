@@ -7,11 +7,11 @@ def createFile(s, o):
     fileObj = open(fileName, 'w+')
     size = 0
     if s == "small":
-        size = 1000 #1 mil
+        size = 5000 #5 mil
     elif s == "medium":
-        size = 100000 #100 mil
+        size = 50000 #50 mil
     elif s == "large":
-        size = 1000000 #1 milhão
+        size = 500000 #500 mil
 
     if (o == "o"):
         for number in xrange(1, size + 1):

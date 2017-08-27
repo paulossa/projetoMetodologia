@@ -1,0 +1,66 @@
+---
+title: "Projeto metodologia cientifica"
+output: pdf_document
+---
+```
+
+```
+
+Quick doc to generate some of the plots for the Scientific Metodology class. 
+
+
+A primeira avaliação é para examinar como os algoritmos isolados se comportam.
+
+
+```{r warning=FALSE,  echo=FALSE}
+library('ggplot2', warn.conflicts = FALSE)
+library('dplyr', warn.conflicts = FALSE)
+data = read.csv("output.csv", sep=";")
+data = mutate(data, timeTaken = timeTaken/1000 )
+summary(data)
+
+
+ggplot(data, aes(alg, timeTaken)) +
+  geom_boxplot() +
+  labs(x = "Algoritmo", y = "Tempo para ordenação em Milissegundos")
+```
+
+
+Ora isolando o bucketSort, que deve haver tido problemas quando o tamanho da entrada fica muito grande e acaba tendo que usar memória virtual para continuar temos. 
+
+```{r warning=FALSE,  echo=FALSE}
+  filteredData = data %>% filter(alg != 'bucketSort')
+  ggplot(filteredData, aes(alg, timeTaken)) +
+    geom_boxplot() +
+    labs(x = "Algoritmo", y = "Tempo para ordenação em Milissegundos")
+```
+
+
+
+Uma melhor maneira de visualizar isso seria: 
+Para cada *tamanho de entrada* e *ordenação* como se distribui o tempo de ordenação de cada algoritmo: 
+
+```{r warning=FALSE,  echo=FALSE}
+ggplot(data, aes(alg, timeTaken)) +
+    geom_boxplot() +
+    labs(x = "Algoritmo", y = "Tempo para ordenação em Milissegundos") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    facet_grid(size ~ order)
+```
+
+
+
+Ao Aplicar LOG ao eixo Y para diminuirmos igualmente as distâncias até a base temos. 
+```{r warning=FALSE,  echo=FALSE}
+
+    ggplot(data, aes(alg, log(timeTaken))) +
+    geom_boxplot() +
+    labs(x = "Algoritmo", y = "Tempo para ordenação em Milissegundos") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    facet_grid(size ~ order)
+
+```
+
+
+
+

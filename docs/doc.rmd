@@ -7,6 +7,7 @@ output: pdf_document
 ```
 
 Quick doc to generate some of the plots for the Scientific Metodology class. 
+Why engrish bra?
 
 
 A primeira avaliação é para examinar como os algoritmos isolados se comportam.
@@ -14,13 +15,30 @@ A primeira avaliação é para examinar como os algoritmos isolados se comportam
 
 ```{r warning=FALSE,  echo=FALSE}
 library('ggplot2', warn.conflicts = FALSE)
-library('dplyr', warn.conflicts = FALSE)
+library(tidyverse, warn.conflicts = FALSE)
+library(GGally)
+library(pscl)
+library(broom)
+library(modelr)
+library(car)
 data = read.csv("output.csv", sep=";")
 data = mutate(data, timeTaken = timeTaken/1000 )
+data_1 <- data %>% filter(order == "o") %>% mutate(order = "ordenado")
+data_2 <- data %>% filter(order == "p") %>% mutate(order = "parcial")
+data_3 <- data %>% filter(order == "r") %>% mutate(order = "aleatório")
+
+data = rbind(data_1, data_2, data_3) 
+
+data_4 <- data %>% filter(size == "large") %>% mutate(size = "grande")
+data_5 <- data %>% filter(size == "medium") %>% mutate(size = "médio")
+data_6 <- data %>% filter(size == "small") %>% mutate(size = "pequeno")
+
+data = rbind(data_4, data_5, data_6) %>% mutate(algoritmo = alg)
+data = subset(data, select= -alg)
 summary(data)
 
 
-ggplot(data, aes(alg, timeTaken)) +
+ggplot(data, aes(algoritmo, timeTaken)) +
   geom_boxplot() +
   labs(x = "Algoritmo", y = "Tempo para ordenação em Milissegundos")
 ```
@@ -29,8 +47,8 @@ ggplot(data, aes(alg, timeTaken)) +
 Ora isolando o bucketSort, que deve haver tido problemas quando o tamanho da entrada fica muito grande e acaba tendo que usar memória virtual para continuar temos. 
 
 ```{r warning=FALSE,  echo=FALSE}
-  filteredData = data %>% filter(alg != 'bucketSort')
-  ggplot(filteredData, aes(alg, timeTaken)) +
+  filteredData = data %>% filter(algoritmo != 'bucketSort')
+  ggplot(filteredData, aes(algoritmo, timeTaken)) +
     geom_boxplot() +
     labs(x = "Algoritmo", y = "Tempo para ordenação em Milissegundos")
 ```
@@ -41,26 +59,66 @@ Uma melhor maneira de visualizar isso seria:
 Para cada *tamanho de entrada* e *ordenação* como se distribui o tempo de ordenação de cada algoritmo: 
 
 ```{r warning=FALSE,  echo=FALSE}
-ggplot(data, aes(alg, timeTaken)) +
+ggplot(data, aes(algoritmo, timeTaken)) +
     geom_boxplot() +
     labs(x = "Algoritmo", y = "Tempo para ordenação em Milissegundos") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
-    facet_grid(size ~ order)
+    
 ```
 
+Aplicando escala logarítimica no eixo Y para melhor visualizar as diferenças entre os algoritmos:
 
+```{r}
 
-Ao Aplicar LOG ao eixo Y para diminuirmos igualmente as distâncias até a base temos. 
-```{r warning=FALSE,  echo=FALSE}
+  data %>%
+  ggplot(aes(x = size, y=timeTaken, color = algoritmo)) +
+  labs(x = "Tamanho da Entrada", y = "Tempo para ordenação em Milissegundos") +
+  geom_jitter() + 
+  scale_y_log10() + 
+  facet_grid(size ~ order)
 
-    ggplot(data, aes(alg, log(timeTaken))) +
-    geom_boxplot() +
-    labs(x = "Algoritmo", y = "Tempo para ordenação em Milissegundos") +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    facet_grid(size ~ order)
 
 ```
 
+```{r}
+regression_data = data %>% mutate(alg = as.factor(algoritmo), order = as.factor(order), size = as.factor(size))
+
+
+model <-  lm(log(timeTaken) ~ alg + size + order + alg * order, data = regression_data)
+glance(model)
+tidy(model)
+Anova(model)
+qqPlot(model)
+residualPlot(model)
+outlierTest(model)
+plot(model)
+
+
+
+#Teste Shapiro-Wilks para normalidade dos residuos
+shapiro.test(residuals(model))
+
+
+augmented_data = regression_data %>% add_predictions(model) %>% add_residuals(model) %>% mutate(timeTaken = log(timeTaken))
+
+ggplot(augmented_data, aes(y=resid, x = pred)) + geom_boxplot() + geom_jitter()
+ggplot(augmented_data, aes(y=resid, x = timeTaken)) + geom_jitter()
+
+
+#pra printar a equacao da regrassao rs
+as.formula(
+  paste0("y ~ ", round(coefficients(model)[1],2), " + ", 
+    paste(sprintf("%.2f * %s", 
+                  coefficients(model)[-1],  
+                  names(coefficients(model)[-1])), 
+          collapse=" + ")
+  )
+)
+
+
+
+
+```
 
 
 
